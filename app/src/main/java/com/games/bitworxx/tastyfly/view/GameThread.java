@@ -1,8 +1,10 @@
 package com.games.bitworxx.tastyfly.view;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.SystemClock;
 import android.view.SurfaceHolder;
 
@@ -22,12 +24,16 @@ public class GameThread extends Thread {
     private long frame2=0;
     private long frame11=0;
     private long frame22=0;
+    private Bitmap BackBit=null;
+    public boolean SignalToUseBit=false;
+    private Thread BackT=null;
     public GameThread(BaseView view)
     {
         super();
         MyHolder=view.getHolder();
         MyView=view;
         Running=true;
+        this.setPriority(MAX_PRIORITY);
         Back.setStyle(Paint.Style.FILL);
         Back.setColor(Color.WHITE);
     }
@@ -45,6 +51,17 @@ public class GameThread extends Thread {
         Running=false;
     }
 
+    private void generateCanvasToBit(Rect bounds)
+    {
+        Bitmap back = Bitmap.createBitmap(bounds.width(),bounds.height(), Bitmap.Config.ARGB_4444);
+
+        Canvas c = new Canvas(back);
+        MyView.drawSurface(c);
+
+        BackBit=null;
+        BackBit=back;
+    }
+
     public  void run()
     {
         Canvas c=null;
@@ -59,11 +76,28 @@ public class GameThread extends Thread {
                     if (c != null)
                     {
                         frame11=SystemClock.elapsedRealtime();
-
-
-                        MyView.action();
                         c.drawRect(c.getClipBounds(), Back);
-                        MyView.drawSurface(c);
+                        MyView.action();
+
+                         if(BackBit==null)
+                         {
+                             generateCanvasToBit(c.getClipBounds());
+                         }
+                            if(BackT==null)
+                            {
+                                BackT=new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        generateCanvasToBit(MyView.getBounds());
+                                        BackT=null;
+                                    }
+                                });
+                                BackT.setPriority(MAX_PRIORITY);
+                                BackT.start();
+                            }
+
+                        c.drawBitmap(BackBit,0,0,null);
+
                         frame22= SystemClock.elapsedRealtime();
 /*
                         if(frame2>0) {

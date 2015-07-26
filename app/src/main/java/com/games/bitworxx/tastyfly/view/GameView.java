@@ -49,7 +49,7 @@ import java.util.TimerTask;
 public class GameView extends BaseView {
 
 
-    public static float FACTOR=(float)8.0;
+    public static float FACTOR=(float)6.0;
 
 
     private Timer START=null;
@@ -395,122 +395,104 @@ drawIt(canvas);
 
     protected void drawIt(Canvas canvas)
     {
-
-        Mace = new Paint();
-        Mace.setStyle(Paint.Style.FILL);
-        Mace.setColor(GameConst.MACE_COLOR);
-
-
-        if(Story0!=null&&!GAME_OVER)
-        {
-            canvas.drawBitmap(Story0.getDraw(), Story0.POS, 0, null);
-
-            if(Story0.Spiders!=null)
-            {
-
-                if(!IS_START)
-                    for(Spider s:Story0.Spiders)
-                    {
-
-                        s.onDraw(canvas);
-                    }
+try {
+    Mace = new Paint();
+    Mace.setStyle(Paint.Style.FILL);
+    Mace.setColor(GameConst.MACE_COLOR);
 
 
-            }
+    if (Story0 != null && !GAME_OVER) {
+        canvas.drawBitmap(Story0.getDraw(), Story0.POS, 0, null);
 
+        if (Story0.Spiders != null) {
 
-        }
-        if(Story1!=null)
-        {
+            if (!IS_START)
+                for (Spider s : Story0.Spiders) {
 
-            canvas.drawBitmap(Story1.getDraw(), Story1.POS, 0, null);
-            if(Story1.Spiders!=null)
-            {
-
-                if(!IS_START)
-                    for(Spider s:Story1.Spiders)
-                    {
-
-                        s.onDraw(canvas);
-                    }
-            }
-        }
-        if(Story2!=null)
-        {
-
-            canvas.drawBitmap(Story2.getDraw(), Story2.POS, 0, null);
-            if(Story2.Spiders!=null)
-            {
-
-                if(!IS_START)
-                    for(Spider s:Story2.Spiders)
-                    {
-
-                        s.onDraw(canvas);
-                    }
-            }
-        }
-
-
-        if(IS_START)
-            ColorTapet.drawOnRect2(canvas, getBounds(), GameConst.SIZE, false, ColorTapet.RED, ColorTapet.GREEN, ColorTapet.BLUE);
-        drawBorders(canvas);
-
-
-        if(IS_START)
-        {
-            MainActivity.MP_UP.start();
-            String seconds = String.valueOf(SECONDS);
-            if(SECONDS==3)seconds="LOAD";
-            if(SECONDS==2)seconds="READY";
-            if(SECONDS==1)seconds="GO";
-            int ll=0-(seconds.length()*(int)GameConst.FONT.getTextSize())/2;
-            canvas.drawText(seconds,getBounds().centerX()+ll,getBounds().centerY(),GameConst.FONT);
-        }
-        else if(!GAME_OVER) {
-
-
-
-
-            ThisChar.animateSink(FLYX, FLYY);
-            if (ThisChar != null) {
-                Point pp=new Point(ThisChar.X, ThisChar.Y);
-                if(!Points.contains(pp))
-                {
-                    Points.add(pp);
-                    if(Points.size()>10)
-                        Points.remove(0);
+                    s.onDraw(canvas);
                 }
-                drawPoints(canvas);
-                ThisChar.onDraw(canvas);
-            }
-
-
-
-        }
-        else
-        {
-
-            if (ThisChar != null) {
-                ThisChar.IsDead=true;
-                ThisChar.onDraw(canvas);
-                ThisChar=null;
-            }
 
 
         }
 
 
-        if (ThisChar != null&&!IS_START) {
+    }
+    if (Story1 != null) {
+
+        canvas.drawBitmap(Story1.getDraw(), Story0.POS+Story0.DisplayBounds.right, 0, null);
+        if (Story1.Spiders != null) {
+
+            if (!IS_START)
+                for (Spider s : Story1.Spiders) {
+
+                    s.onDraw(canvas);
+                }
+        }
+    }
+    if (Story2 != null) {
+
+        canvas.drawBitmap(Story2.getDraw(), Story0.POS+Story0.DisplayBounds.right*2, 0, null);
+        if (Story2.Spiders != null) {
+
+            if (!IS_START)
+                for (Spider s : Story2.Spiders) {
+
+                    s.onDraw(canvas);
+                }
+        }
+    }
+
+
+    if (IS_START)
+        ColorTapet.drawOnRect2(canvas, getBounds(), GameConst.SIZE, false, ColorTapet.RED, ColorTapet.GREEN, ColorTapet.BLUE);
+    drawBorders(canvas);
+
+
+    if (IS_START) {
+        MainActivity.MP_UP.start();
+        String seconds = String.valueOf(SECONDS);
+        if (SECONDS == 3) seconds = "LOAD";
+        if (SECONDS == 2) seconds = "READY";
+        if (SECONDS == 1) seconds = "GO";
+        int ll = 0 - (seconds.length() * (int) GameConst.FONT.getTextSize()) / 2;
+        canvas.drawText(seconds, getBounds().centerX() + ll, getBounds().centerY(), GameConst.FONT);
+    } else if (!GAME_OVER) {
+
+
+        ThisChar.animateSink(FLYX, FLYY);
+        if (ThisChar != null) {
+            Point pp = new Point(ThisChar.X, ThisChar.Y);
+            if (!Points.contains(pp)) {
+                Points.add(pp);
+                if (Points.size() > 10)
+                    Points.remove(0);
+            }
+            drawPoints(canvas);
             ThisChar.onDraw(canvas);
         }
 
-        if(GAME_OVER&&!IS_START)
-        {
-            drawOver(canvas);
 
+    } else {
+
+        if (ThisChar != null) {
+            ThisChar.IsDead = true;
+            ThisChar.onDraw(canvas);
+            ThisChar = null;
         }
 
+
+    }
+
+
+    if (ThisChar != null && !IS_START) {
+        ThisChar.onDraw(canvas);
+    }
+
+    if (GAME_OVER && !IS_START) {
+        drawOver(canvas);
+
+    }
+}catch(Exception e){}
 
     }
 
@@ -678,52 +660,44 @@ drawIt(canvas);
 
     private void checkLevel()
     {
-       if(Story0!=null)
-       {
-           int  x = Story0.DisplayBounds.width()+Story0.POS;
-           if(x<-100)
-           {
-               LAST_2=SystemClock.elapsedRealtime();
-               int last = Story0.POS+Story0.DisplayBounds.width();
-               Story0.release();
-               ColorTapet.setRandom();
+        try {
+            if (Story0 != null) {
+                int x = Story0.DisplayBounds.width() + Story0.POS;
+                if (x < -100) {
+                    LAST_2 = SystemClock.elapsedRealtime();
+                    int last = Story0.POS + Story0.DisplayBounds.width();
+                    Story0.release();
+                    ColorTapet.setRandom();
 
-               GAME_COUNT++;
-               LAST_GAME_COUNT++;
-               if(Story1!=null)
-               {
-                   Story0=Story1;
+                    GAME_COUNT++;
+                    LAST_GAME_COUNT++;
+                    if (Story1 != null) {
+                        Story0 = Story1;
 
-               }
-               else
-               {
-                   Story0=getNextLevel(last);
-                   Story1 =getNextLevel(last+getWidth());
-                   Story2 =getNextLevel(last+getWidth()*2);
-               }
+                    } else {
+                        Story0 = getNextLevel(last);
+                        Story1 = getNextLevel(last + getWidth());
+                        Story2 = getNextLevel(last + getWidth() * 2);
+                    }
 
-               if(Story2!=null)
-               {
-                   Story1=Story2;
-                   Story2 = getNextLevel(Story1.POS+Story1.DisplayBounds.width());
-               }
-               else
-               {
-                   Story2 = getNextLevel(Story1.POS+Story1.DisplayBounds.width());
-                   Story1=Story2;
-                   Story2 = getNextLevel(Story1.POS+Story1.DisplayBounds.width());
-               }
+                    if (Story2 != null) {
+                        Story1 = Story2;
+                        Story2 = getNextLevel(Story1.POS + Story1.DisplayBounds.width());
+                    } else {
+                        Story2 = getNextLevel(Story1.POS + Story1.DisplayBounds.width());
+                        Story1 = Story2;
+                        Story2 = getNextLevel(Story1.POS + Story1.DisplayBounds.width());
+                    }
 
 
-           }
-       }
+                }
+            }
 
-        if(LAST_GAME_COUNT>=MAX_COUNT)
-        {
-            FACTOR+=GameConst.PEROID_FACTOR;
-            LAST_GAME_COUNT=0;
-        }
-
+            if (LAST_GAME_COUNT >= MAX_COUNT) {
+                FACTOR += GameConst.PEROID_FACTOR;
+                LAST_GAME_COUNT = 0;
+            }
+        }catch(Exception e){}
     }
 
     private void doSpider(Level level,int size)

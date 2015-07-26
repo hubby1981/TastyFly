@@ -123,6 +123,7 @@ public static Runnable Start;
             e.printStackTrace();
         }
         try {
+
             MP_UP.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,7 +140,7 @@ public static Runnable Start;
             e.printStackTrace();
         }
         if(MP_UP!=null)
-            MP_UP.setVolume(0f,0f);
+            MP_UP.setVolume(1f,1f);
 
 
         descriptor = null;
@@ -165,7 +166,7 @@ public static Runnable Start;
             e.printStackTrace();
         }
         if(MP_PONG!=null)
-        MP_PONG.setVolume(0f,0f);
+        MP_PONG.setVolume(1f,1f);
 
 
     }
