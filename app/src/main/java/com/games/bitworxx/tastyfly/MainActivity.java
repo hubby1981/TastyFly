@@ -112,8 +112,9 @@ public static Runnable Start;
             e.printStackTrace();
         }
         if(MP!=null) {
-            MP.setVolume(0.5f, 0.5f);
+            MP.setVolume(0f,0f);
             MP.setLooping(true);
+            MP.start();
         }
          descriptor = null;
         try {
@@ -138,7 +139,7 @@ public static Runnable Start;
             e.printStackTrace();
         }
         if(MP_UP!=null)
-            MP_UP.setVolume(1f, 1f);
+            MP_UP.setVolume(0f,0f);
 
 
         descriptor = null;
@@ -164,7 +165,7 @@ public static Runnable Start;
             e.printStackTrace();
         }
         if(MP_PONG!=null)
-        MP_PONG.setVolume(2f, 2f);
+        MP_PONG.setVolume(0f,0f);
 
 
     }

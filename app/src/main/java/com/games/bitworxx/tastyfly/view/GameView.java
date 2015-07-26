@@ -585,8 +585,7 @@ drawIt(canvas);
                 saveBest(GAME_COUNT);
             if(GAME_COUNT>readHigh())
                 saveHigh(GAME_COUNT);
-            MainActivity.MP.stop();
-
+            MainActivity.MP.setVolume(0f,0f);
         }
 
     }
@@ -781,7 +780,7 @@ drawIt(canvas);
             START.cancel();
         TimeStart= SystemClock.elapsedRealtime();
         ThisChar.IsDead=false;
-        MainActivity.MP.start();
+        MainActivity.MP.setVolume(1f,1f);
         START=null;
         GAME_COUNT=0;
         LAST_GAME_COUNT=0;
